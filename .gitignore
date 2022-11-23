@@ -1,0 +1,6 @@
+.vscode/
+.vscode-test/
+dist/
+out/
+node_modules/
+.vscodeignore
