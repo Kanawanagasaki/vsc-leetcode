@@ -1,0 +1,58 @@
+.root {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.body {
+    overflow-x: auto;
+}
+
+.profile {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+
+.profile img {
+    border-radius: 16px;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+}
+
+.footer-show-replies {
+    display: flex;
+    flex-direction: row;
+    gap: .3rem;
+    align-items: center;
+}
+
+.replies {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+.reply {
+    display: flex;
+    flex-direction: column;
+    background: var(--vscode-input-background);
+    padding: 1rem;
+}
+
+::deep .body pre {
+    overflow-x: auto;
+}

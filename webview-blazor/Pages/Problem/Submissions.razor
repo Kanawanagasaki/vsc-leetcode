@@ -1,0 +1,150 @@
+@inherits AProblemChildComponent
+
+<div class="root">
+    @if (_submissionState is not null || Service.IsSubmitting)
+    {
+        if (_submissionState is null)
+        {
+            <div class="state waiting">
+                <div class="state-header wait">
+                    Preparing...
+                </div>
+            </div>
+        }
+        else
+        {
+            var wrapperClassName = _submissionState.State.State == "PENDING" || _submissionState.State.State ==
+            "STARTED" ? "waiting"
+            : _submissionState.State.TotalCorrect is not null && _submissionState.State.TotalTestcases is not null
+            && _submissionState.State.TotalCorrect == _submissionState.State.TotalTestcases ? "successful"
+            : "failed";
+            var headerClassName = _submissionState.State.State == "PENDING" || _submissionState.State.State ==
+            "STARTED" ? "wait"
+            : _submissionState.State.TotalCorrect is not null && _submissionState.State.TotalTestcases is not null
+            && _submissionState.State.TotalCorrect == _submissionState.State.TotalTestcases ? "success"
+            : "fail";
+
+            <div class='state @(wrapperClassName)'>
+                @switch (_submissionState.State.State)
+                {
+                    case "PENDING":
+                        <div class='state-header @(headerClassName)'>Pending...</div>
+                        break;
+                    case "STARTED":
+                        <div class='state-header @(headerClassName)'>Executing...</div>
+                        break;
+                    default:
+                        <div class='state-header @(headerClassName)'>
+                            @(_submissionState.State.StatusMessage ?? _submissionState.State.State)
+                        </div>
+                        break;
+                }
+                @if (_submissionState.State.FullRuntimeError is not null || _submissionState.State.RuntimeError is not null)
+                {
+                    <pre
+            class="compile-error"><code>@(_submissionState.State.FullRuntimeError ?? _submissionState.State.RuntimeError)</code></pre>
+                }
+                @if (_submissionState.State.FullCompileError is not null || _submissionState.State.CompileError is not null)
+                {
+                    <pre
+            class="compile-error"><code>@(_submissionState.State.FullCompileError ?? _submissionState.State.CompileError)</code></pre>
+                }
+                @if (!string.IsNullOrWhiteSpace(_submissionState.State.LastTestcase))
+                {
+                    <vscode-text-area readonly resize='vertical' value='@(_submissionState.State.LastTestcase)'>
+                        Last Testcase
+                    </vscode-text-area>
+                }
+                @if (!string.IsNullOrWhiteSpace(_submissionState.State.StdOutput))
+                {
+                    <vscode-text-area readonly resize='vertical' value='@(_submissionState.State.StdOutput)'>
+                        Stdout
+                    </vscode-text-area>
+                }
+                @if (!string.IsNullOrWhiteSpace(_submissionState.State.CodeOutput))
+                {
+                    <vscode-text-area readonly resize='vertical' value='@(_submissionState.State.CodeOutput)'>
+                        Output
+                    </vscode-text-area>
+                }
+                @if (!string.IsNullOrWhiteSpace(_submissionState.State.ExpectedOutput))
+                {
+                    <vscode-text-area readonly resize='vertical' value='@(_submissionState.State.ExpectedOutput)'>
+                        Expected
+                    </vscode-text-area>
+                }
+                @if (_submissionState.State.TotalCorrect is not null && _submissionState.State.TotalTestcases is not null)
+                {
+                    <div class="submission">
+                        <div>
+                            Passed @(_submissionState.State.TotalCorrect)/@(_submissionState.State.TotalTestcases) testcases
+                        </div>
+                        <div>
+                            <div>
+                                Runtime: @(_submissionState.State.StatusRuntime ?? "...")
+                            </div>
+                            <div>
+                                Beats @((_submissionState.State.RuntimePercentile ?? 0f).ToString("0.##"))%
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                Memory: @(_submissionState.State.StatusMemory ?? "...")
+                            </div>
+                            <div>
+                                Beats @((_submissionState.State.MemoryPercentile ?? 0f).ToString("0.##"))%
+                            </div>
+                        </div>
+                        <div>
+                            <span class="lang-badge">
+                                @(_submissionState.State.PrettyLang)
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+
+    @if (Parent.Problem?.Submissions?.Submissions is not null)
+    {
+        if (Parent.Problem.Submissions.Submissions.Length == 0)
+        {
+            <div class="center-attention">
+                You haven't submit anything yet
+            </div>
+        }
+        else
+        {
+            <div class="list">
+                @foreach (var submission in Parent.Problem.Submissions.Submissions)
+                {
+                    <a class="submission" href='@("https://leetcode.com" + submission.Url)' target="_blank">
+                        <div>
+                            <div class='@(submission.Status == 10 ? "success" : "fail")'>
+                                @submission.StatusDisplay
+                            </div>
+                            @if (int.TryParse(submission.Timestamp, out int seconds))
+                            {
+                                <div>
+                                    @(DateTimeOffset.UnixEpoch.AddSeconds(seconds).ToLocalTime().ToString("d' 'MMM' 'yyyy"))
+                                </div>
+                            }
+                        </div>
+                        <div>
+                            Runtime: @submission.Runtime
+                        </div>
+                        <div>
+                            Memory: @submission.Memory
+                        </div>
+                        <div>
+                            <span class="lang-badge">
+                                @(submission.LangName)
+                            </span>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    }
+</div>

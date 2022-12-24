@@ -1,0 +1,98 @@
+.wrapper {
+    position: relative;
+    background: var(--vscode-sideBar-background);
+    cursor: pointer;
+}
+
+.wrapper:nth-child(2n + 1) .problem {
+    background: var(--vscode-input-background);
+}
+
+.wrapper:hover {
+    box-shadow: 0px 0px 8px var(--vscode-widget-shadow);
+}
+
+.wrapper:nth-child(2n):hover .problem {
+    border: 1px solid var(--vscode-widget-shadow);
+}
+
+.problem {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border: 1px solid transparent;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: .5rem;
+}
+
+.name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status {
+    width: 18px;
+    height: 18px;
+}
+
+.info {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.easy {
+    color: rgb(0 184 163);
+}
+
+.medium {
+    color: rgb(255 192 30)
+}
+
+.hard {
+    color: rgb(255 55 95)
+}
+
+.tags-wrapper {
+    position: absolute;
+    top: calc(100% - 2px);
+    left: 0;
+    right: 0;
+
+    display: none;
+
+    background: var(--vscode-sideBar-background);
+    box-shadow: 0px 0px 8px var(--vscode-widget-shadow);
+    clip-path: inset(0px -8px -8px -8px);
+
+    z-index: 5;
+}
+
+.wrapper:nth-child(2n) .tags-wrapper {
+    border-left: 1px solid var(--vscode-widget-shadow);
+    border-right: 1px solid var(--vscode-widget-shadow);
+    border-bottom: 1px solid var(--vscode-widget-shadow);
+}
+
+.wrapper:hover .tags-wrapper {
+    display: block;
+}
+
+.tags {
+    padding: 0 8px 8px 8px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: .3rem;
+}
+
+.wrapper:nth-child(2n + 1) .tags {
+    background: var(--vscode-input-background);
+}

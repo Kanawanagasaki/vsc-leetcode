@@ -1,0 +1,245 @@
+@inherits AProblemChildComponent
+
+<div class="root">
+
+    @if (_runcodeState is not null
+    && Parent.Problem?.TitleSlug == _runcodeState.TitleSlug
+    && _runcodeState.State.State == "SUCCESS")
+    {
+        <div class="header">
+            @if (_runcodeState.State.RunSuccess == true && _runcodeState.State.CorrectAnswer == false)
+            {
+                <div class="header-state fail">Wrong Answer</div>
+            }
+            else
+            {
+                <div class='header-state @(_runcodeState.State.RunSuccess == true ? "success" : "fail")'>
+                    @(_runcodeState.State.StatusMessage)
+                </div>
+            }
+
+            @if (_runcodeState.State.StatusRuntime is not null)
+            {
+                <div>
+                    Runtime: @_runcodeState.State.StatusRuntime
+                </div>
+            }
+
+            @if (_runcodeState.State.StatusRuntime is not null)
+            {
+                <div>
+                    Memory: @_runcodeState.State.StatusMemory
+                </div>
+            }
+
+            @if (_runcodeState.State.ElapsedTime is not null)
+            {
+                <div>
+                    Elapsed Time: @(_runcodeState.State.ElapsedTime)ms
+                </div>
+            }
+        </div>
+
+        if (_runcodeState.State.FullRuntimeError is not null)
+        {
+            <pre class="compile-error"><code>@_runcodeState.State.FullRuntimeError</code></pre>
+        }
+
+        if (_runcodeState.State.FullCompileError is not null)
+        {
+            <pre class="compile-error"><code>@_runcodeState.State.FullCompileError</code></pre>
+        }
+    }
+
+    @if (Parent.Problem?.ConsoleConfig is not null)
+    {
+        for (int i = 0; i < Parent.Problem.ConsoleConfig.ExampleTestcaseList.Length; i++)
+        {
+            int _i = i;
+            bool? isSuccess = null;
+
+            if (_runcodeState is not null
+            && Parent.Problem.TitleSlug == _runcodeState.TitleSlug
+            && _runcodeState.State.CodeAnswer is not null)
+            {
+                if (_i < _runcodeState.State.CodeAnswer.Length
+                && _runcodeState.State.ExpectedCodeAnswer is not null
+                && _i < _runcodeState.State.ExpectedCodeAnswer.Length)
+                    isSuccess = _runcodeState.State.CodeAnswer[_i].Trim() == _runcodeState.State.ExpectedCodeAnswer[_i].Trim();
+                else if (_i == _runcodeState.State.CodeAnswer.Length)
+                    isSuccess = false;
+            }
+
+            <div class="testcase">
+                <div class='testcase-header @(isSuccess == true ? "success" : isSuccess == false ? "fail" : "" )'>
+                    Example testcase #@(_i + 1)
+                </div>
+                <vscode-text-area readonly value='@(Parent.Problem.ConsoleConfig.ExampleTestcaseList[_i])' resize='vertical'>
+                </vscode-text-area>
+                @if (_runcodeState is not null && Parent.Problem.TitleSlug == _runcodeState.TitleSlug)
+                {
+                    if (_runcodeState.State.StdOutput is not null
+                    && _i < _runcodeState.State.StdOutput.Length
+                    && !string.IsNullOrWhiteSpace(_runcodeState.State.StdOutput[_i]))
+                    {
+                        <vscode-text-area readonly value='@(_runcodeState.State.StdOutput[_i])' resize='vertical'>
+                            Stdout
+                        </vscode-text-area>
+                    }
+                    if (_runcodeState.State.CodeAnswer is not null
+                    && _i < _runcodeState.State.CodeAnswer.Length)
+                    {
+                        <vscode-text-area readonly value='@(_runcodeState.State.CodeAnswer[_i])' resize='vertical'>
+                            Output
+                        </vscode-text-area>
+                    }
+                    if (_runcodeState.State.ExpectedCodeAnswer is not null
+                    && _i < _runcodeState.State.ExpectedCodeAnswer.Length)
+                    {
+                        <vscode-text-area readonly value='@(_runcodeState.State.ExpectedCodeAnswer[_i])' resize='vertical'>
+                            Expected
+                        </vscode-text-area>
+                    }
+                }
+            </div>
+
+            <vscode-divider></vscode-divider>
+        }
+    }
+
+    @{
+        int count = 0;
+        foreach (var kv in _testcases)
+        {
+            int index = (Parent.Problem?.ConsoleConfig?.ExampleTestcaseList?.Length ?? 0) + count;
+            bool? isSuccess = null;
+
+            if (_runcodeState is not null
+            && Parent.Problem?.TitleSlug == _runcodeState.TitleSlug
+            && _runcodeState.State.CodeAnswer is not null)
+            {
+                if (index < _runcodeState.State.CodeAnswer.Length
+                && _runcodeState.State.ExpectedCodeAnswer is not null
+                && index < _runcodeState.State.ExpectedCodeAnswer.Length)
+                    isSuccess = _runcodeState.State.CodeAnswer[index].Trim() == _runcodeState.State.ExpectedCodeAnswer[index].Trim();
+                else if (index == _runcodeState.State.CodeAnswer.Length)
+                    isSuccess = false;
+            }
+
+            <div class="testcase" @key='kv.Key'>
+                <div class="testcase-header @(isSuccess == true ? "success" : isSuccess == false ? "fail" : "" )">
+                    User testcase #@(count + 1)
+                </div>
+                <vscode-text-area value='@(kv.Value)' resize='vertical'
+                @onchange='args => ChangeTestcase(kv.Key, args.Value?.ToString() ?? "")'>
+                </vscode-text-area>
+                @if (_runcodeState is not null && Parent.Problem?.TitleSlug == _runcodeState.TitleSlug)
+                {
+                    if (_runcodeState.State.StdOutput is not null
+                    && index < _runcodeState.State.StdOutput.Length
+                    && !string.IsNullOrWhiteSpace(_runcodeState.State.StdOutput[index]))
+                    {
+                        <vscode-text-area readonly value='@(_runcodeState.State.StdOutput[index])' resize='vertical'>
+                            Stdout
+                        </vscode-text-area>
+                    }
+                    if (_runcodeState.State.CodeAnswer is not null
+                    && index < _runcodeState.State.CodeAnswer.Length)
+                    {
+                        <vscode-text-area readonly value='@(_runcodeState.State.CodeAnswer[index])' resize='vertical'>
+                            Output
+                        </vscode-text-area>
+                    }
+                    if (_runcodeState.State.ExpectedCodeAnswer is not null
+                    && index < _runcodeState.State.ExpectedCodeAnswer.Length)
+                    {
+                        <vscode-text-area readonly value='@(_runcodeState.State.ExpectedCodeAnswer[index])' resize='vertical'>
+                            Expected
+                        </vscode-text-area>
+                    }
+                }
+                <div>
+                    <vscode-button @onclick='_ => RemoveTestcase(kv.Key)'>
+                        Delete
+                    </vscode-button>
+                </div>
+            </div>
+
+            <vscode-divider></vscode-divider>
+            count++;
+        }
+    }
+
+    <div class="btns">
+        @if (Service.IsRunningCode)
+        {
+            if (_testcases.Count < 10)
+            {
+                <vscode-button disabled>
+                    Add Testcase
+                </vscode-button>
+            }
+
+            <vscode-button disabled>
+                Run
+            </vscode-button>
+
+            <vscode-button disabled>
+                Submit
+            </vscode-button>
+        }
+        else
+        {
+            if (_testcases.Count < 10)
+            {
+                <vscode-button @onclick='AddTestcase'>
+                    Add Testcase
+                </vscode-button>
+            }
+
+            <vscode-button @onclick='Run'>
+                Run
+            </vscode-button>
+
+            <vscode-button @onclick='Submit'>
+                Submit
+            </vscode-button>
+        }
+
+        @if (_runcodeState is not null && Parent.Problem?.TitleSlug == _runcodeState.TitleSlug)
+        {
+            bool? isSuccess = null;
+            if (_runcodeState.State.State == "SUCCESS")
+                isSuccess = _runcodeState.State.RunSuccess == true && _runcodeState.State.CorrectAnswer == true;
+
+            <div class='state @(isSuccess == true ? "success" : isSuccess == false ? "fail" : "")'>
+                @switch (_runcodeState.State.State)
+                {
+                    case "PENDING":
+                        <text>Pending...</text>
+                        break;
+                    case "STARTED":
+                        <text>Executing...</text>
+                        break;
+                    case "SUCCESS":
+                        if (_runcodeState.State.RunSuccess == true && _runcodeState.State.CorrectAnswer == false)
+                        {
+                            <text>Wrong Answer</text>
+                        }
+                        else
+                        {
+                            <text>@(_runcodeState.State.StatusMessage)</text>
+                        }
+                        break;
+                    default:
+                        <text>@(_runcodeState.State.StatusMessage ?? _runcodeState.State.State)</text>
+                        break;
+                }
+            </div>
+        }
+        else if (Service.IsRunningCode)
+        {
+            <div class='state'>Preparing...</div>
+        }
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<CascadingValue Value="this">
+    <div class="root">
+        <div class='header @(IsCollapsed ? "collapsed" : "") @(IsAbsolute ? "absolute" : "")' @onclick='_ => IsCollapsed = !IsCollapsed'>
+            <div>
+                @if (!IsMultiSelect && _activeItem is not null)
+                {
+                    @_activeItem.ChildContent
+                }
+                else
+                {
+                    @Title
+                    @if (IsMultiSelect && _multiselectedItems.Count > 0)
+                    {
+                        <text>&nbsp;</text>
+                        <vscode-badge>
+                            @_multiselectedItems.Count
+                        </vscode-badge>
+                    }
+                }
+            </div>
+            <div class='codicon @(IsCollapsed ? "codicon-chevron-down" : "codicon-chevron-up")'></div>
+        </div>
+        @if (!IsCollapsed)
+        {
+            <div class='body @(IsAbsolute ? "absolute" : "")'>
+                @foreach (var item in _items)
+                {
+                    <div class="item" @onclick="_ => OnItemClick(item)">
+                        @item.ChildContent
+                        @if (IsMultiSelect ? _multiselectedItems.Contains(item) : item == _activeItem)
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14px" height="14px"
+                    fill="rgb(10 132 255)">
+                                <path fill-rule="evenodd"
+                        d="M9.688 15.898l-3.98-3.98a1 1 0 00-1.415 1.414L8.98 18.02a1 1 0 001.415 0L20.707 7.707a1 1 0 00-1.414-1.414l-9.605 9.605z"
+                        clip-rule="evenodd"></path>
+                            </svg>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    @ChildContent
+</CascadingValue>

@@ -1,0 +1,16 @@
+<div class="root">
+    <div class="header" @onclick='_ => _isCollapsed = !_isCollapsed'>
+        <div>
+            @Title
+        </div>
+        <div>
+            <div class='codicon @(_isCollapsed ? "codicon-chevron-down" : "codicon-chevron-up")'></div>
+        </div>
+    </div>
+    @if (!_isCollapsed)
+    {
+        <div class="collapsible">
+            @ChildContent
+        </div>
+    }
+</div>

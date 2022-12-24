@@ -1,0 +1,31 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: .65rem;
+    transition: all .3s;
+    background: var(--vscode-toolbar-activeBackground);
+}
+
+.card:hover {
+    box-shadow: 0px 0px 8px var(--vscode-widget-shadow);
+    background: var(--vscode-toolbar-hoverBackground);
+}
+
+.storage-path {
+    overflow: auto;
+}
+
+.enabled {
+    color: rgb(0 184 163);
+}
+
+.disabled {
+    color: rgb(255 55 95);
+}

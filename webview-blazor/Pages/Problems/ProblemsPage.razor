@@ -1,0 +1,148 @@
+<div class="root">
+    <div class="header">
+        <vscode-text-field class="search-input" type="text" placeholder="Search" @onchange="OnSearchChange">
+            <span slot="start" class="codicon codicon-search"></span>
+        </vscode-text-field>
+        <button class="small" @onclick='ShowSort'>
+            sort
+        </button>
+        <button class="small" @onclick='ShowFilter'>
+            filter
+        </button>
+    </div>
+    @if (_isSortShown)
+    {
+        <div class="sort">
+            <vscode-radio-group orientation="vertical" @onchange='OnSortChange'>
+                <label slot="label">Sort by</label>
+                <vscode-radio value="@FilterModel.ESort.IdAsc" checked="@(_sort == FilterModel.ESort.IdAsc)">
+                    Id ASC
+                </vscode-radio>
+                <vscode-radio value="@FilterModel.ESort.IdDesc" checked="@(_sort == FilterModel.ESort.IdDesc)">
+                    Id DESC</vscode-radio>
+                <vscode-radio value="@FilterModel.ESort.AcceptanceAsc"
+                checked="@(_sort == FilterModel.ESort.AcceptanceAsc)">
+                    Acceptance ASC</vscode-radio>
+                <vscode-radio value="@FilterModel.ESort.AcceptanceDesc"
+                checked="@(_sort == FilterModel.ESort.AcceptanceDesc)">
+                    Acceptance DESC</vscode-radio>
+                <vscode-radio value="@FilterModel.ESort.DifficultyAsc"
+                checked="@(_sort == FilterModel.ESort.DifficultyAsc)">
+                    Difficulty ASC</vscode-radio>
+                <vscode-radio value="@FilterModel.ESort.DifficultyDesc"
+                checked="@(_sort == FilterModel.ESort.DifficultyDesc)">
+                    Difficulty DESC</vscode-radio>
+            </vscode-radio-group>
+        </div>
+    }
+    @if (_isFiltersShown)
+    {
+        <div class="filter">
+            <Dropdown Title="Difficulty" Unselected="async _ => await OnDifficultyChange(FilterModel.EDifficulty.None)">
+                <DropdownItem IsSelected="_difficulty == FilterModel.EDifficulty.Easy"
+                Selected="async _ => await OnDifficultyChange(FilterModel.EDifficulty.Easy)">
+                    <div class="easy">Easy</div>
+                </DropdownItem>
+                <DropdownItem IsSelected="_difficulty == FilterModel.EDifficulty.Medium"
+                Selected="async _ => await OnDifficultyChange(FilterModel.EDifficulty.Medium)">
+                    <div class="medium">Medium</div>
+                </DropdownItem>
+                <DropdownItem IsSelected="_difficulty == FilterModel.EDifficulty.Hard"
+                Selected="async _ => await OnDifficultyChange(FilterModel.EDifficulty.Hard)">
+                    <div class="hard">Hard</div>
+                </DropdownItem>
+            </Dropdown>
+            <Dropdown Title="Status" Unselected="async _ => await OnStatusChange(FilterModel.EStatus.None)">
+                <DropdownItem IsSelected="_status == FilterModel.EStatus.Todo"
+                Selected="async _ => await OnStatusChange(FilterModel.EStatus.Todo)">
+                    <div class="status-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14px" height="14px"
+                        fill="rgb(255 255 255)">
+                            <path fill-rule="evenodd" d="M4 12a1 1 0 011-1h14a1 1 0 110 2H5a1 1 0 01-1-1z"
+                            clip-rule="evenodd"></path>
+                        </svg>
+                        Todo
+                    </div>
+                </DropdownItem>
+                <DropdownItem IsSelected="_status == FilterModel.EStatus.Solved"
+                Selected="async _ => await OnStatusChange(FilterModel.EStatus.Solved)">
+                    <div class="status-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14px" height="14px"
+                        fill="rgb(44 187 93)">
+                            <path fill-rule="evenodd"
+                            d="M9.688 15.898l-3.98-3.98a1 1 0 00-1.415 1.414L8.98 18.02a1 1 0 001.415 0L20.707 7.707a1 1 0 00-1.414-1.414l-9.605 9.605z"
+                            clip-rule="evenodd"></path>
+                        </svg>
+                        Solved
+                    </div>
+                </DropdownItem>
+                <DropdownItem IsSelected="_status == FilterModel.EStatus.Attempted"
+                Selected="async _ => await OnStatusChange(FilterModel.EStatus.Attempted)">
+                    <div class="status-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14px" height="14px"
+                        fill="rgb(255 192 30)">
+                            <path fill-rule="evenodd"
+                            d="M8.972 3a1 1 0 01.964.649l4.978 13.274 1.632-5.221A1 1 0 0117.5 11H21a1 1 0 110 2h-2.765l-2.28 7.298a1 1 0 01-1.891.053L9.086 7.077l-1.632 5.221A1 1 0 016.5 13H3a1 1 0 110-2h2.765l2.28-7.298A1 1 0 018.973 3z"
+                            clip-rule="evenodd"></path>
+                        </svg>
+                        Attempted
+                    </div>
+                </DropdownItem>
+            </Dropdown>
+            @if (PageProps.Props is not null)
+            {
+                if (PageProps.Props.ProblemsetCategories.Length > 0)
+                {
+                    <Dropdown Title="Category" Unselected="async _ => await OnCategoryChange(null)">
+                        @foreach (var cat in PageProps.Props.ProblemsetCategories)
+                        {
+                            <DropdownItem Selected="async _ => await OnCategoryChange(cat.TitleSlug)">
+                                @cat.Title
+                            </DropdownItem>
+                        }
+                    </Dropdown>
+                }
+                if (PageProps.Props.TopicTags.Length > 0)
+                {
+                    <Dropdown Title="Tags" IsMultiSelect="true">
+                        @foreach (var tag in PageProps.Props.TopicTags.OrderBy(x => x.Name))
+                        {
+                            <DropdownItem Selected="async _ => await OnTagAdd(tag.Slug)"
+                Unselected="async _ => await OnTagRemove(tag.Slug)">
+                                @tag.Name
+                            </DropdownItem>
+                        }
+                    </Dropdown>
+                }
+                if (PageProps.Props.FeaturedLists.Length > 0)
+                {
+                    <Dropdown Title="Featured List" Unselected="async _ => await OnFeaturedListChange(null)">
+                        @foreach (var fl in PageProps.Props.FeaturedLists.Where(x => Auth.Status?.IsPremium == true ||
+                       !x.IsPaidOnly))
+                        {
+                            <DropdownItem Selected="async _ => await OnFeaturedListChange(fl.IdHash)">
+                                @fl.Name
+                            </DropdownItem>
+                        }
+                    </Dropdown>
+                }
+            }
+        </div>
+    }
+    <div class='@(_isLoading ? "progress-bar" : "devider")'></div>
+    @if (!_isLoading && _totalProblems == 0)
+    {
+        <div>
+            No results found
+        </div>
+    }
+    <Virtualize ItemsProvider="ProblemsProvider" Context="problem" ItemSize="61" OverscanCount="31"
+        @ref="_virtualizeRef">
+        <ItemContent>
+            <ProblemItem Model="problem" />
+        </ItemContent>
+        <Placeholder>
+            <ProblemItem Model="null" />
+        </Placeholder>
+    </Virtualize>
+</div>

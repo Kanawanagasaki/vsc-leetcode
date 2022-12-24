@@ -1,0 +1,153 @@
+@inherits AProblemChildComponent
+
+<div class="root">
+    <div class="header">
+        <div class="title">
+            @if (Parent.Problem?.Title is null)
+            {
+                <div>...</div>
+            }
+            else
+            {
+                <div>@(Parent.Problem.Title.QuestionFrontendId). @(Parent.Problem.Title.Title)</div>
+                @if (Parent.Problem.Title.IsPaidOnly && Auth.Status?.IsPremium != true)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px"
+                fill="rgb(255 161 22)">
+                        <path fill-rule="evenodd"
+                    d="M7 8v2H6a3 3 0 00-3 3v6a3 3 0 003 3h12a3 3 0 003-3v-6a3 3 0 00-3-3h-1V8A5 5 0 007 8zm8 0v2H9V8a3 3 0 116 0zm-3 6a2 2 0 100 4 2 2 0 000-4z"
+                    clip-rule="evenodd"></path>
+                    </svg>
+                }
+            }
+        </div>
+        @if (Parent.Problem?.Title is not null)
+        {
+            <div class="header-info">
+                <div class="@(Parent.Problem.Title.Difficulty.ToLower())">
+                    @Parent.Problem.Title.Difficulty
+                </div>
+                <div class="with-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16px" height="16px"
+                    fill="currentColor">
+                        <path fill-rule="evenodd"
+                        d="M7.04 9.11l3.297-7.419a1 1 0 01.914-.594 3.67 3.67 0 013.67 3.671V7.33h4.028a2.78 2.78 0 012.78 3.2l-1.228 8.01a2.778 2.778 0 01-2.769 2.363H5.019a2.78 2.78 0 01-2.78-2.78V11.89a2.78 2.78 0 012.78-2.78H7.04zm-2.02 2a.78.78 0 00-.781.78v6.232c0 .431.35.78.78.78H6.69V11.11H5.02zm12.723 7.793a.781.781 0 00.781-.666l1.228-8.01a.78.78 0 00-.791-.898h-5.04a1 1 0 01-1-1V4.77c0-.712-.444-1.32-1.07-1.56L8.69 10.322v8.58h9.053z"
+                        clip-rule="evenodd"></path>
+                    </svg>
+                    @Parent.Problem.Title.Likes
+                </div>
+                <div class="with-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16px" height="16px"
+                    fill="currentColor">
+                        <path fill-rule="evenodd"
+                        d="M13.663 22.309a1 1 0 01-.914.594 3.67 3.67 0 01-3.67-3.671V16.67H5.05a2.78 2.78 0 01-2.78-3.2l1.228-8.01a2.778 2.778 0 012.769-2.364H18.98a2.78 2.78 0 012.78 2.781v6.232a2.78 2.78 0 01-2.78 2.78H16.96l-3.297 7.419zm5.318-9.419a.78.78 0 00.78-.78V5.878a.78.78 0 00-.78-.78H17.31v7.792h1.67zM6.257 5.097a.781.781 0 00-.781.666l-1.229 8.01a.78.78 0 00.792.898h5.04a1 1 0 011 1v3.56c0 .712.443 1.32 1.07 1.56l3.16-7.113v-8.58H6.258z"
+                        clip-rule="evenodd"></path>
+                    </svg>
+                    @Parent.Problem.Title.Dislikes
+                </div>
+                @if (Parent.Problem.Stats is not null)
+                {
+                    <div>
+                        Accepted @Parent.Problem.Stats.TotalAccepted
+                    </div>
+                    <div>
+                        Submissions @Parent.Problem.Stats.TotalSubmission
+                    </div>
+                    <div>
+                        Acceptance Rate @Parent.Problem.Stats.AcRate
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @((MarkupString)(Parent.Problem?.Content?.Content ?? ""))
+
+    @if (Parent.Problem?.EditorData is not null && StoragePath.Model?.Exists == true)
+    {
+        <div class="code-now">
+            @if (Parent.Problem.EditorData.CodeSnippets.Any(x => x.LangSlug == Settings.Model?.DefaultLanguage))
+            {
+                var code = Parent.Problem.EditorData.CodeSnippets.First(x => x.LangSlug == Settings.Model?.DefaultLanguage);
+
+                <vscode-button @onclick='async _ => await Solve(code.LangSlug)'>
+                    Code with @(code.Lang)
+                </vscode-button>
+                <vscode-button @onclick='_ => _showCodeDropdown = !_showCodeDropdown'>
+                    <div class='codicon @(_showCodeDropdown ? "codicon-chevron-down" : "codicon-chevron-up")'></div>
+                </vscode-button>
+            }
+            else
+            {
+                <vscode-button @onclick='_ => _showCodeDropdown = !_showCodeDropdown'>
+                    Code with...
+                </vscode-button>
+            }
+            @if (_showCodeDropdown)
+            {
+                <div class="code-now-dropdown">
+                    @foreach (var code in Parent.Problem.EditorData.CodeSnippets)
+                    {
+                        <div class="item" @onclick='async _ => await Solve(code.LangSlug)'>
+                            @(code.Lang)
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    @if (Parent.Problem?.Tags is not null && Parent.Problem.Tags.Length > 0)
+    {
+        <vscode-divider></vscode-divider>
+        <Collapsible Title="Related Topics">
+            <div class='tags'>
+                @foreach (var tag in Parent.Problem.Tags)
+                {
+                    <vscode-tag>@tag.Name</vscode-tag>
+                }
+            </div>
+        </Collapsible>
+    }
+    @if (Parent.Problem?.SimilarProblems is not null && Parent.Problem.SimilarProblems.Length > 0)
+    {
+        <vscode-divider></vscode-divider>
+        <Collapsible Title="Similar Questions">
+            <div class='similar-questions'>
+                @foreach (var similar in Parent.Problem.SimilarProblems)
+                {
+                    <div class="similar-question" @onclick='async _ => await OpenProblem(similar.TitleSlug)'>
+                        <div>
+                            @similar.Title
+                        </div>
+                        <div class="@(similar.Difficulty.ToLower())">
+                            @similar.Difficulty
+                        </div>
+                    </div>
+                }
+            </div>
+        </Collapsible>
+    }
+    @if (Parent.Problem?.Hints is not null && Parent.Problem.Hints.Hints.Length > 0)
+    {
+        <vscode-divider></vscode-divider>
+        <Collapsible Title="Hints">
+            <div class='hints'>
+                @for (int i = 0; i < Parent.Problem.Hints.Hints.Length; i++)
+                {
+                    int _i = i;
+                    if (_shownHints.Contains(_i))
+                    {
+                        <div>@((MarkupString)Parent.Problem.Hints.Hints[_i])</div>
+                    }
+                    else
+                    {
+                        <div class="show-hint" @onclick='_ => _shownHints.Add(_i)'>
+                            Show hint #@(_i + 1)
+                        </div>
+                    }
+                }
+            </div>
+        </Collapsible>
+    }
+</div>

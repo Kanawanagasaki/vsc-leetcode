@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Kanawanagasaki.VSCode.LeetCode.WebView</title>
+    <base href="/" />
+    <link href="${extensionMediaPath}/css/app.css" rel="stylesheet" />
+    <link href="${extensionMediaPath}/css/Kanawanagasaki.VSCode.LeetCode.WebView.styles.css" rel="stylesheet" />
+    <link href="${extensionMediaPath}/lib/codicon/codicon.css" rel="stylesheet" />
+    <script type="module" src="${extensionMediaPath}/js/toolkit.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div style="padding: 0 20px;">
+            <div style="display: flex; flex-direction: row; gap: 0.5rem;">
+                <img class="logo" src="${extensionMediaPath}/img/logo-light.png"
+                    style="width: 48px; height: 48px; border-radius: .5rem; object-fit: contain;">
+                <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 0.25rem;">
+                    <div style="font-size: 16px; font-weight: bold;">
+                        LeetCode
+                    </div>
+                    <div style="color: var(--vscode-descriptionForeground); font-size: 14px;">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="${extensionMediaPath}/_framework/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        const vscode = acquireVsCodeApi();
+
+        globalThis.vscLeetcode = {
+            extensionMediaPath: "${extensionMediaPath}",
+            context: "menu",
+            getScrollTop: (el) => el.scrollTop,
+            init: async () => {
+                const { getAssemblyExports } = await globalThis.getDotnetRuntime(0);
+                const exports = await getAssemblyExports("Kanawanagasaki.VSCode.LeetCode.WebView.dll");
+
+                window.addEventListener('message', ev => {
+                    const { sender, command, data } = ev.data;
+                    if (sender !== "vsc-leetcode")
+                        return;
+                    exports.Kanawanagasaki.VSCode.LeetCode.WebView.Services.JsService.OnMessage(command, JSON.stringify(data));
+                });
+            },
+            sendMessage: (command, data) => {
+                vscode.postMessage({
+                    sender: "vsc-leetcode",
+                    command,
+                    data: JSON.parse(data)
+                });
+            }
+        };
+
+        Blazor.start({ loadBootResource: (type, name, defaultUri, integrity) => "${extensionMediaPath}/_framework/" + name });
+    </script>
+</body>
+
+</html>

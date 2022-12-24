@@ -1,0 +1,20 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: .5rem;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: .875rem;
+    color: var(--vscode-descriptionForeground);
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.header:hover {
+    color: var(--vscode-foreground);
+}

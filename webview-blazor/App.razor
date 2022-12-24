@@ -1,0 +1,69 @@
+﻿<CascadingValue Value="this">
+    @switch (_webviewContext)
+    {
+        case "menu":
+            <LayoutView Layout="@typeof(MainLayout)">
+                @if (!_isChromiumInstalled)
+                {
+                    if (_chromiumError is not null)
+                    {
+                        <div class="error">
+                            @_chromiumError
+                        </div>
+                    }
+                    else if (_chromiumProgress is not null)
+                    {
+                        var percent = (double)_chromiumProgress.DownloadedBytes / (double)_chromiumProgress.TotalBytes * 100d;
+
+                        <div class="chromium">
+                            <div class="chromium-header">
+                                @if (_chromiumProgress.DownloadedBytes < _chromiumProgress.TotalBytes)
+                                {
+                                    <div>
+                                        Downloading Chromium
+                                    </div>
+                                    <div>
+                                        @(percent.ToString("0.00"))%
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        Installing Chromium
+                                    </div>
+                                }
+                            </div>
+                            @if (_chromiumProgress.DownloadedBytes < _chromiumProgress.TotalBytes)
+                            {
+                                <div class="chromium-progress" style='width: @(percent.ToString("0.##"))%'></div>
+                            }
+                            else
+                            {
+                                <div class="progress-bar" style='width: @(percent.ToString("0.##"))%'></div>
+                            }
+                        </div>
+                    }
+                }
+                else if (Auth.State != AuthService.AuthState.Authorized
+                || StoragePath.Model is null
+                || !StoragePath.Model.Exists)
+                {
+                    <Setup />
+                }
+                else if (IsSettingsShown)
+                {
+                    <Settings />
+                }
+                else
+                {
+                    <ProblemsPage />
+                }
+            </LayoutView>
+            break;
+        case "problem":
+            <LayoutView Layout="@typeof(ProblemLayout)">
+                <ProblemPage />
+            </LayoutView>
+            break;
+    }
+</CascadingValue>

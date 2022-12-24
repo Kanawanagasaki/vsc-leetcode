@@ -1,0 +1,53 @@
+<CascadingValue Value='@this'>
+    <div class="root">
+        @if (_communitySolutionTopicId is long topicId)
+        {
+            <CommunitySolution TopicId='@topicId' />
+        }
+        <vscode-panels class='@(_communitySolutionTopicId is not null ? "hide" : "")'>
+            <vscode-panel-tab id='tab-description'>Description</vscode-panel-tab>
+            @if (Problem?.TitleSlug == _activeTextEditor?.TitleSlug)
+            {
+                <vscode-panel-tab id='tab-test'>Run</vscode-panel-tab>
+            }
+            <vscode-panel-tab id='tab-submissions'>Submissions</vscode-panel-tab>
+            <vscode-panel-tab id='tab-discussion'>
+                Discussion
+                @if (Problem?.Discussions is not null)
+                {
+                    <vscode-badge appearance="secondary">@Problem.Discussions.Topic.TopLevelCommentCount</vscode-badge>
+                }
+            </vscode-panel-tab>
+            <vscode-panel-tab id='tab-solutions'>
+                Solutions
+                @if (Problem?.Solutions is not null)
+                {
+                    <vscode-badge appearance="secondary">@Problem.Solutions.TotalNum</vscode-badge>
+                }
+            </vscode-panel-tab>
+
+            <vscode-panel-view id='view-description'>
+                <Description />
+            </vscode-panel-view>
+
+            @if (Problem?.TitleSlug == _activeTextEditor?.TitleSlug)
+            {
+                <vscode-panel-view id='view-test'>
+                    <RunCode />
+                </vscode-panel-view>
+            }
+
+            <vscode-panel-view id='view-submissions'>
+                <Submissions />
+            </vscode-panel-view>
+
+            <vscode-panel-view id='view-discussion'>
+                <Discussions />
+            </vscode-panel-view>
+
+            <vscode-panel-view id='view-solutions'>
+                <Solutions />
+            </vscode-panel-view>
+        </vscode-panels>
+    </div>
+</CascadingValue>

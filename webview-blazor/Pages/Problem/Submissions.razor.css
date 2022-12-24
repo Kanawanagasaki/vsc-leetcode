@@ -1,0 +1,101 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+}
+
+.submission {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    align-items: center;
+    padding: .5rem 1rem;
+    color: var(--vscode-foreground);
+}
+
+a.submission {
+    cursor: pointer;
+}
+
+a.submission:hover {
+    background: var(--vscode-input-background);
+}
+
+.submission>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.submission>div:first-child {
+    justify-content: start;
+    align-items: start;
+}
+
+.submission>div:last-child {
+    justify-content: end;
+    align-items: end;
+}
+
+
+.state {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: .5rem 1rem;
+}
+
+.state.successful {
+    background-color: rgba(44, 187, 93, .18);
+}
+
+.state.waiting {
+    background-color: rgba(255, 192, 30, .18);
+}
+
+.state.failed {
+    background-color: rgba(239, 71, 67, .18);
+}
+
+.state-header {
+    font-weight: 500;
+    font-size: 1.25rem;
+}
+
+.success {
+    color: rgb(44 187 93);
+}
+
+.wait {
+    color: rgb(255 192 30);
+}
+
+.fail {
+    color: rgb(239 71 67);
+}
+
+.compile-error {
+    color: rgb(241 99 95);
+    background-color: rgba(239, 71, 67, .12);
+    padding: 1rem .75rem;
+    overflow-x: auto;
+}
+
+.lang-badge {
+    display: inline-flex;
+    align-items: center;
+
+    color: rgb(10 132 255);
+    background-color: rgba(10, 132, 255, .18);
+    font-weight: 500;
+    font-size: .75rem;
+    padding: .25rem .75rem;
+    border-radius: 9999px;
+}

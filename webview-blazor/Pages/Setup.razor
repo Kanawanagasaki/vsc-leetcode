@@ -1,0 +1,24 @@
+<div class="root">
+    @if (Auth.State == AuthService.AuthState.NotAuthorized)
+    {
+        <div class="card">
+            <div>
+                Sign in to view problems
+            </div>
+            <vscode-button @onclick='Auth.SignIn'>
+                Sign In
+            </vscode-button>
+        </div>
+    }
+    @if (StoragePath.Model is not null && !StoragePath.Model.Exists)
+    {
+        <div class="card">
+            <div>
+                Select the folder where the code for the problems you have solved will be stored
+            </div>
+            <vscode-button @onclick='Js.SelectStoragePath'>
+                Select
+            </vscode-button>
+        </div>
+    }
+</div>

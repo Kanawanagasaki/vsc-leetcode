@@ -1,0 +1,64 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.devider {
+    background: var(--vscode-input-background);
+    height: 1px;
+}
+
+.progress-bar {
+    animation-name: progress-animation;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    background: linear-gradient(90deg, var(--vscode-progressBar-background) 0%, var(--vscode-progressBar-background) 25%, var(--vscode-input-background) 25%, var(--vscode-input-background) 100%);
+    background-size: 400% 100%;
+    height: 1px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    gap: .3rem;
+}
+
+.search-input {
+    flex-grow: 1;
+}
+
+.easy {
+    color: rgb(0 184 163);
+}
+
+.medium {
+    color: rgb(255 192 30);
+}
+
+.hard {
+    color: rgb(255 55 95);
+}
+
+.status-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+@keyframes progress-animation {
+    0% {
+        background-position: 400% 0%;
+    }
+
+    100% {
+        background-position: 0% 0%;
+    }
+}

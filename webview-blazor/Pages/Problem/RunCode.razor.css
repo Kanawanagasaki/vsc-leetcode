@@ -1,0 +1,60 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: .5rem;
+}
+
+.testcase {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.testcase-header {
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+
+.btns {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.header-state {
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+}
+
+.compile-error {
+    color: rgb(241 99 95);
+    background-color: rgba(239, 71, 67, .12);
+    padding: 1rem .75rem;
+    overflow-x: auto;
+}
+
+.compile-error>code {
+    color: rgb(241 99 95);
+}
+
+.state {
+    font-weight: 500;
+}
+
+.success {
+    color: rgb(44 187 93);
+}
+
+.fail {
+    color: rgb(239 71 67);
+}

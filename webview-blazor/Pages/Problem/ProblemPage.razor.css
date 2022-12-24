@@ -1,0 +1,129 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 8px 20px;
+}
+
+vscode-panel-tab {
+    display: block;
+}
+
+.easy {
+    display: inline-block;
+    color: rgb(0 184 163);
+    background-color: rgb(0 184 163/.15);
+    font-weight: 500;
+    text-transform: capitalize;
+    padding: .25rem .623rem;
+    border-radius: 21px;
+}
+
+.medium {
+    display: inline-block;
+    color: rgb(255 192 30);
+    background-color: rgb(255 192 30/.15);
+    font-weight: 500;
+    text-transform: capitalize;
+    padding: .25rem .623rem;
+    border-radius: 21px;
+}
+
+.hard {
+    display: inline-block;
+    color: rgb(255 55 95);
+    background-color: rgb(255 55 95/.15);
+    font-weight: 500;
+    text-transform: capitalize;
+    padding: .25rem .623rem;
+    border-radius: 21px;
+}
+
+.testcases {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: .5rem;
+}
+
+.testcase {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.testcase-header {
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+
+.testcases-btns {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+}
+
+.runcode-header {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.runcode-header-state {
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+}
+
+.compile-error {
+    color: rgb(241 99 95);
+    background-color: rgba(239, 71, 67, .12);
+    padding: 1rem .75rem;
+    overflow-x: auto;
+}
+
+.compile-error>code {
+    color: rgb(241 99 95);
+}
+
+.runcode-state {
+    font-weight: 500;
+}
+
+.success {
+    color: rgb(44 187 93);
+}
+
+.wait {
+    color: rgb(255 192 30);
+}
+
+.fail {
+    color: rgb(239 71 67);
+}
+
+::deep .lang-badge {
+    display: inline-flex;
+    align-items: center;
+
+    color: rgb(10 132 255);
+    background-color: rgba(10, 132, 255, .18);
+    font-weight: 500;
+    font-size: .75rem;
+    padding: .25rem .75rem;
+    border-radius: 9999px;
+}
+
+::deep .center-attention {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 1.25rem;
+}
+
+.hide {
+    display: none;
+}

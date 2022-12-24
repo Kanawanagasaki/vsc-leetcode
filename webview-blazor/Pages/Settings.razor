@@ -1,0 +1,49 @@
+<div class="root">
+    <div class="card">
+        <div>
+            Display tags when hovering over a problem in the list
+        </div>
+        @if (Service.Model.ShowTagsOnHover)
+        {
+            <div class="enabled">
+                Enabled
+            </div>
+        }
+        else
+        {
+            <div class="disabled">
+                Disabled
+            </div>
+        }
+        <vscode-button @onclick='ToggleShowTagsOnHover'>
+            @(Service.Model.ShowTagsOnHover ? "Disable" : "Enable")
+        </vscode-button>
+    </div>
+    <div class="card">
+        <div>
+            Default language for solving problems
+        </div>
+        <vscode-dropdown current-value="@Service.Model.DefaultLanguage" @onchange='OnDefaultLanguageChange'>
+            @foreach (var kv in KEY_VALUE_LANG)
+            {
+                if (kv.Key == Service.Model.DefaultLanguage)
+                {
+                    <vscode-option value='@kv.Key' selected="selected">@(kv.Value)</vscode-option>
+                }
+                else
+                {
+                    <vscode-option value='@kv.Key'>@(kv.Value)</vscode-option>
+                }
+            }
+        </vscode-dropdown>
+    </div>
+    <div class="card">
+        <div>
+            Folder where the code for the problems you have solved will be stored
+        </div>
+        <code class="storage-path">@(StoragePath.Model?.Path ?? "")</code>
+        <vscode-button @onclick='Js.SelectStoragePath'>
+            Select
+        </vscode-button>
+    </div>
+</div>

@@ -1,54 +1,170 @@
 {
-  "name": "vsc-leetcode",
-  "displayName": "vsc-leetcode",
-  "description": "Solve leetcode problems inside Visual Studio Code",
-  "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.73.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:vsc-leetcode.signin"
-  ],
-  "main": "./dist/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "vsc-leetcode.signin",
-        "title": "Leetcode: Sign In"
-      }
-    ]
-  },
-  "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "webpack",
-    "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
-  },
-  "devDependencies": {
-    "@types/glob": "^8.0.0",
-    "@types/mocha": "^10.0.0",
-    "@types/node": "16.x",
-    "@types/vscode": "^1.73.0",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "@vscode/test-electron": "^2.2.0",
-    "eslint": "^8.26.0",
-    "glob": "^8.0.3",
-    "mocha": "^10.1.0",
-    "ts-loader": "^9.4.1",
-    "typescript": "^4.8.4",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0"
-  },
-  "dependencies": {
-    "puppeteer": "^19.3.0"
-  }
+    "name": "vsc-leetcode",
+    "displayName": "LeetCode",
+    "description": "Solve LeetCode problems inside Visual Studio Code",
+    "version": "0.1.0",
+    "author": "Kanawanagasaki",
+    "license": "MIT",
+    "icon": "media/img/logo.png",
+    "publisher": "Kanawanagasaki",
+    "engines": {
+        "vscode": "^1.73.0"
+    },
+    "categories": [
+        "Other",
+        "Snippets"
+    ],
+    "keywords": [
+        "leetcode",
+        "kanawanagasaki",
+        "solve",
+        "problem",
+        "problems",
+        "puzzle",
+        "algorithm",
+        "interview",
+        "vsc-leetcode"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Kanawanagasaki/vsc-leetcode"
+    },
+    "activationEvents": [
+        "onView:vsc-leetcode-home",
+        "onWebviewPanel:vsc-leetcode-problem"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "vsc-leetcode",
+                    "title": "LeetCode",
+                    "icon": "media/svg/logo.svg"
+                }
+            ]
+        },
+        "views": {
+            "vsc-leetcode": [
+                {
+                    "id": "vsc-leetcode-home",
+                    "type": "webview",
+                    "name": "HOME",
+                    "icon": "media/svg/logo.svg",
+                    "contextualTitle": "LeetCode",
+                    "visibility": "visible"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "LeetCode",
+            "properties": {
+                "vsc-leetcode.storagePath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Folder where the code for the problems you have solved will be stored"
+                },
+                "vsc-leetcode.showTagsOnHover": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Display tags when hovering over a problem in the list"
+                },
+                "vsc-leetcode.defaultLanguage": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Default language for solving problems",
+                    "enum": [
+                        "",
+                        "cpp",
+                        "java",
+                        "python",
+                        "python3",
+                        "mysql",
+                        "mssql",
+                        "oraclesql",
+                        "c",
+                        "csharp",
+                        "javascript",
+                        "ruby",
+                        "bash",
+                        "swift",
+                        "golang",
+                        "scala",
+                        "html",
+                        "pythonml",
+                        "kotlin",
+                        "rust",
+                        "php",
+                        "typescript",
+                        "racket",
+                        "erlang",
+                        "elixir",
+                        "dart"
+                    ],
+                    "enumDescriptions": [
+                        "",
+                        "C++",
+                        "Java",
+                        "Python",
+                        "Python3",
+                        "MySQL",
+                        "MS SQL Server",
+                        "Oracle",
+                        "C",
+                        "C#",
+                        "JavaScript",
+                        "Ruby",
+                        "Bash",
+                        "Swift",
+                        "Go",
+                        "Scala",
+                        "HTML",
+                        "Python ML",
+                        "Kotlin",
+                        "Rust",
+                        "PHP",
+                        "TypeScript",
+                        "Racket",
+                        "Erlang",
+                        "Elixir",
+                        "Dart"
+                    ]
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "build.bat && webpack",
+        "watch": "build.bat && webpack --watch",
+        "package": "publish.bat && webpack --mode production --devtool hidden-source-map",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^8.0.0",
+        "@types/hidefile": "^3.0.0",
+        "@types/mocha": "^10.0.0",
+        "@types/node": "16.x",
+        "@types/vscode": "^1.73.0",
+        "@typescript-eslint/eslint-plugin": "^5.42.0",
+        "@typescript-eslint/parser": "^5.42.0",
+        "@vscode/test-electron": "^2.2.0",
+        "eslint": "^8.26.0",
+        "glob": "^8.0.3",
+        "mocha": "^10.1.0",
+        "node-loader": "^2.0.0",
+        "ts-loader": "^9.4.1",
+        "typescript": "^4.8.4",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0"
+    },
+    "dependencies": {
+        "hidefile": "^3.0.0",
+        "node-fetch": "^3.3.0",
+        "puppeteer-core": "^19.4.1"
+    }
 }

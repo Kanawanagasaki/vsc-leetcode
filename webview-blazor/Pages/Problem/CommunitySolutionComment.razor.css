@@ -1,0 +1,79 @@
+.root {
+    display: flex;
+    flex-direction: column;
+
+    gap: .5rem;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+    font-weight: 500;
+    font-size: .85rem;
+}
+
+.profile {
+    border-radius: 9999px;
+    width: 20px;
+    height: 20px;
+}
+
+.date {
+    font-size: .65rem;
+    color: var(--vscode-descriptionForeground);
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+}
+
+.footer-show-replies {
+    display: flex;
+    flex-direction: row;
+    gap: .3rem;
+    align-items: center;
+}
+
+.replies {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+.reply {
+    display: flex;
+    flex-direction: column;
+    background: var(--vscode-input-background);
+    padding: 1rem;
+}
+
+.reply-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reply-profile {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+    font-weight: 500;
+    font-size: 1.125rem;
+}
+
+::deep .body pre {
+    overflow-x: auto;
+}

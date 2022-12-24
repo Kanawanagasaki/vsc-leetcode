@@ -1,0 +1,54 @@
+<div class="root">
+    <div class="header">
+        <div class="user">
+            <img class="profile" src='@Comment.Post.Author.Profile.UserAvatar' />
+            <div>
+                @Comment.Post.Author.Username
+            </div>
+        </div>
+        <div class="date">
+            @(DateTimeOffset.UnixEpoch.AddSeconds(Comment.Post.CreationDate).ToLocalTime().ToString("d' 'MMM' 'yyyy"))
+        </div>
+    </div>
+    <div class="body" @ref='_body'>
+        @((MarkupString)_contentHtml)
+    </div>
+    <div class="footer">
+        @if(Comment.NumChildren > 0)
+        {
+            <button class="small footer-show-replies" @onclick='ShowReplies' disabled='@(_isLoadingReplies)'>
+                <div class="codicon codicon-comment"></div>
+                <div>
+                    Show @Comment.NumChildren Replies
+                </div>
+            </button>
+        }
+    </div>
+</div>
+@if (_replies is not null && _replies.Length > 0 && !_isLoadingReplies)
+{
+    <div class="replies">
+        @foreach (var reply in _replies.OrderBy(x => x.Post.CreationDate))
+        {
+            <div class="reply">
+                <div class="reply-header">
+                    <div class="reply-profile">
+                        <img class="profile" src='@(reply.Post.Author.Profile.UserAvatar)' />
+                        <div>
+                            @reply.Post.Author.Username
+                        </div>
+                    </div>
+                    @if(reply.Post.UpdationDate is long updationDate2)
+                    {
+                        <div>
+                            @(DateTimeOffset.UnixEpoch.AddSeconds(updationDate2).ToLocalTime().ToString("d' 'MMM' 'yyyy', 'HH':'mm"))
+                        </div>
+                    }
+                </div>
+                <div class="body">
+                    @((MarkupString)Markdig.Markdown.ToHtml(reply.Post.Content?.Replace("\\n", "\n")?.Replace("\\t", "\t") ?? ""))
+                </div>
+            </div>
+        }
+    </div>
+}

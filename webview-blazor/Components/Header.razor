@@ -1,0 +1,69 @@
+<div class="root">
+    <div class="header">
+        @if (Auth.Status?.Avatar is not null)
+        {
+            <img class="logo" src="@Auth.Status.Avatar" />
+        }
+        else
+        {
+            <img class="logo" src="@(Js.ExtensionMediaPath)/img/logo-light.png" />
+        }
+        <div class="header-content">
+            <div class="title">
+                <div>
+                    LeetCode
+                </div>
+
+                @if (_isChromiumInstalled)
+                {
+                    <button class="small settings-btn" @onclick='OnSettingsClick'>
+                        <div class="codicon codicon-gear"></div>
+                    </button>
+                }
+            </div>
+            <div class="auth">
+                @if (_isChromiumInstalled)
+                {
+                    <div class="text">
+                        @switch (Auth.State)
+                        {
+                            case AuthService.AuthState.Pending:
+                                <text>Pending...</text>
+                                break;
+                            case AuthService.AuthState.Authorized:
+                                <text>@(Auth.Status?.Username ?? "Authorized")</text>
+                                break;
+                            case AuthService.AuthState.NotAuthorized:
+                                <text>Not authorized</text>
+                                break;
+                        }
+                    </div>
+                    @if (Auth.State == AuthService.AuthState.NotAuthorized)
+                    {
+                        <button class="small" @onclick='Auth.SignIn'>
+                            Sign in
+                        </button>
+                    }
+                    else if (Auth.State == AuthService.AuthState.Authorized)
+                    {
+                        <button class="small" @onclick='SignOut'>
+                            Sign out
+                        </button>
+                    }
+                }
+                else
+                {
+                    <div class="text">
+                        Loading...
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    @if (_signinError is not null)
+    {
+        <div class="error">
+            @_signinError.Message
+        </div>
+    }
+</div>

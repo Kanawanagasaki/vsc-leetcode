@@ -1,0 +1,39 @@
+@inherits AProblemChildComponent
+
+<div class="root">
+    @if (Parent.Problem is null
+    || Parent.Problem.RequestedDetails.HasFlag(ProblemModel.EDetails.DiscussionTopics)
+    || _list is null)
+    {
+        <div class="center-attention">
+            Loading...
+        </div>
+    }
+    else if (_list.Data.Length == 0)
+    {
+        <div class="center-attention">
+            No comments yet.
+        </div>
+    }
+    else
+    {
+        foreach (var post in _list.Data)
+        {
+            <DiscussionPost Model="post" @key='post.Id' />
+        }
+        <div class="pagination">
+            @if (_list.PageNo > 1)
+            {
+                <button class="small" @onclick='DiscussionPrevPage'>
+                    Back
+                </button>
+            }
+            @if (_list.PageNo * _list.NumPerPage < _list.TotalNum)
+            {
+                <button class="small" @onclick='DiscussionNextPage'>
+                    Next
+                </button>
+            }
+        </div>
+    }
+</div>
