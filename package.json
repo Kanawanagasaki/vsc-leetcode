@@ -22,8 +22,7 @@
         "problems",
         "puzzle",
         "algorithm",
-        "interview",
-        "vsc-leetcode"
+        "interview"
     ],
     "repository": {
         "type": "git",
