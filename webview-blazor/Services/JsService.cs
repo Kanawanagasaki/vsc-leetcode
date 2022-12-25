@@ -36,8 +36,10 @@ public partial class JsService
         => await _js.InvokeAsync<int>("globalThis.vscLeetcode.getScrollTop", elRef);
     public async Task ClickOnEl(string elId)
         => await _js.InvokeVoidAsync("globalThis.vscLeetcode.clickOnEl", elId);
-    public async Task UpdateState(string problemTitleSlug)
-        => await _js.InvokeVoidAsync("globalThis.vscLeetcode.updateState", problemTitleSlug);
+    public async Task SetState(StateModel state)
+        => await _js.InvokeVoidAsync("globalThis.vscLeetcode.setState", state);
+    public async Task<StateModel?> GetState()
+        => await _js.InvokeAsync<StateModel?>("globalThis.vscLeetcode.getState");
     public async Task HighlightPreCode(ElementReference el, string? lang = null)
         => await _js.InvokeVoidAsync("globalThis.vscLeetcode.highlightPreCode", el, lang);
     #endregion

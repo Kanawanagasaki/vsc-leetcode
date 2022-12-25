@@ -12,27 +12,36 @@ public class FilterModel
     #endregion
 
     #region Sort
-    private ESort _sort = ESort.IdAsc;
-    public string? OrderBy
-        => _sort switch
+    public string? OrderBy { get; set; }
+    public string? SortOrder { get; set; }
+    public FilterModel WithSort(ESort sort)
+    {
+        OrderBy = sort switch
         {
             ESort.IdAsc or ESort.IdDesc => "FRONTEND_ID",
             ESort.AcceptanceAsc or ESort.AcceptanceDesc => "AC_RATE",
             ESort.DifficultyAsc or ESort.DifficultyDesc => "DIFFICULTY",
             _ => null
         };
-    public string? SortOrder
-        => _sort switch
+        SortOrder = sort switch
         {
             ESort.IdAsc or ESort.AcceptanceAsc or ESort.DifficultyAsc => "ASCENDING",
             ESort.IdDesc or ESort.AcceptanceDesc or ESort.DifficultyDesc => "DESCENDING",
             _ => null
         };
-    public FilterModel WithSort(ESort sort)
-    {
-        _sort = sort;
         return this;
     }
+    public ESort GetSort()
+        => (OrderBy, SortOrder) switch
+        {
+            ("FRONTEND_ID", "ASCENDING") => ESort.IdAsc,
+            ("FRONTEND_ID", "DESCENDING") => ESort.IdDesc,
+            ("AC_RATE", "ASCENDING") => ESort.AcceptanceAsc,
+            ("AC_RATE", "DESCENDING") => ESort.AcceptanceDesc,
+            ("DIFFICULTY", "ASCENDING") => ESort.DifficultyAsc,
+            ("DIFFICULTY", "DESCENDING") => ESort.DifficultyDesc,
+            _ => ESort.IdAsc
+        };
     public enum ESort
     {
         IdAsc, IdDesc, AcceptanceAsc, AcceptanceDesc, DifficultyAsc, DifficultyDesc
@@ -40,20 +49,26 @@ public class FilterModel
     #endregion
 
     #region Difficulty
-    private EDifficulty _difficulty = EDifficulty.None;
-    public string? Difficulty
-        => _difficulty switch
+    public string? Difficulty { get; set; }
+    public FilterModel WithDifficulty(EDifficulty difficulty)
+    {
+        Difficulty = difficulty switch
         {
             EDifficulty.Easy => "EASY",
             EDifficulty.Medium => "MEDIUM",
             EDifficulty.Hard => "HARD",
             _ => null
         };
-    public FilterModel WithDifficulty(EDifficulty difficulty)
-    {
-        _difficulty = difficulty;
         return this;
     }
+    public EDifficulty GetDifficulty()
+        => Difficulty switch
+        {
+            "EASY" => EDifficulty.Easy,
+            "MEDIUM" => EDifficulty.Medium,
+            "HARD" => EDifficulty.Hard,
+            _ => EDifficulty.None
+        };
     public enum EDifficulty
     {
         None, Easy, Medium, Hard
@@ -61,20 +76,26 @@ public class FilterModel
     #endregion
 
     #region Status
-    private EStatus _status = EStatus.None;
-    public string? Status
-        => _status switch
+    public string? Status { get; set; }
+    public FilterModel WithStatus(EStatus status)
+    {
+        Status = status switch
         {
             EStatus.Todo => "NOT_STARTED",
             EStatus.Solved => "AC",
             EStatus.Attempted => "TRIED",
             _ => null
         };
-    public FilterModel WithStatus(EStatus status)
-    {
-        _status = status;
         return this;
     }
+    public EStatus GetStatus()
+        => Status switch
+        {
+            "NOT_STARTED" => EStatus.Todo,
+            "AC" => EStatus.Solved,
+            "TRIED" => EStatus.Attempted,
+            _ => EStatus.None
+        };
     public enum EStatus
     {
         None, Todo, Solved, Attempted

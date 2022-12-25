@@ -29,10 +29,10 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.window.registerWebviewPanelSerializer("vsc-leetcode-problem", {
-		async deserializeWebviewPanel(webviewPanel, state: { titleSlug?: string }) {
-			if (!state.hasOwnProperty("titleSlug") || typeof state.titleSlug !== "string")
+		async deserializeWebviewPanel(webviewPanel, state: { problemTitleSlug?: string }) {
+			if (!state.hasOwnProperty("problemTitleSlug") || typeof state.problemTitleSlug !== "string")
 				return;
-			const problemTitle = await leetcodeController.getProblemTitle(state.titleSlug);
+			const problemTitle = await leetcodeController.getProblemTitle(state.problemTitleSlug);
 			if (problemTitle)
 				webviewController.restoreProblemWebview(webviewPanel, problemTitle, messageController);
 		}

@@ -34,36 +34,16 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <script src="${extensionMediaPath}/_framework/blazor.webassembly.js" autostart="false"></script>
-    <script>
-        const vscode = acquireVsCodeApi();
 
+    <script>
         globalThis.vscLeetcode = {
             extensionMediaPath: "${extensionMediaPath}",
-            context: "menu",
-            getScrollTop: (el) => el.scrollTop,
-            init: async () => {
-                const { getAssemblyExports } = await globalThis.getDotnetRuntime(0);
-                const exports = await getAssemblyExports("Kanawanagasaki.VSCode.LeetCode.WebView.dll");
-
-                window.addEventListener('message', ev => {
-                    const { sender, command, data } = ev.data;
-                    if (sender !== "vsc-leetcode")
-                        return;
-                    exports.Kanawanagasaki.VSCode.LeetCode.WebView.Services.JsService.OnMessage(command, JSON.stringify(data));
-                });
-            },
-            sendMessage: (command, data) => {
-                vscode.postMessage({
-                    sender: "vsc-leetcode",
-                    command,
-                    data: JSON.parse(data)
-                });
-            }
+            context: "menu"
         };
-
-        Blazor.start({ loadBootResource: (type, name, defaultUri, integrity) => "${extensionMediaPath}/_framework/" + name });
     </script>
+
+    <script src="${extensionMediaPath}/_framework/blazor.webassembly.js" autostart="false"></script>
+    <script src="${extensionMediaPath}/js/app.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 <div class="root">
     <div class="header">
-        <vscode-text-field class="search-input" type="text" placeholder="Search" @onchange="OnSearchChange">
+        <vscode-text-field class="search-input" type="text" placeholder="Search" @onchange="OnSearchChange"
+            value="@_searchKeywords">
             <span slot="start" class="codicon codicon-search"></span>
         </vscode-text-field>
         <button class="small" @onclick='ShowSort'>
@@ -96,7 +97,8 @@
                     <Dropdown Title="Category" Unselected="async _ => await OnCategoryChange(null)">
                         @foreach (var cat in PageProps.Props.ProblemsetCategories)
                         {
-                            <DropdownItem Selected="async _ => await OnCategoryChange(cat.TitleSlug)">
+                            <DropdownItem IsSelected='cat.TitleSlug == _categorySlug'
+                Selected="async _ => await OnCategoryChange(cat.TitleSlug)">
                                 @cat.Title
                             </DropdownItem>
                         }
@@ -107,7 +109,7 @@
                     <Dropdown Title="Tags" IsMultiSelect="true">
                         @foreach (var tag in PageProps.Props.TopicTags.OrderBy(x => x.Name))
                         {
-                            <DropdownItem Selected="async _ => await OnTagAdd(tag.Slug)"
+                            <DropdownItem IsSelected='_tags.Contains(tag.Slug)' Selected="async _ => await OnTagAdd(tag.Slug)"
                 Unselected="async _ => await OnTagRemove(tag.Slug)">
                                 @tag.Name
                             </DropdownItem>
@@ -120,7 +122,8 @@
                         @foreach (var fl in PageProps.Props.FeaturedLists.Where(x => Auth.Status?.IsPremium == true ||
                        !x.IsPaidOnly))
                         {
-                            <DropdownItem Selected="async _ => await OnFeaturedListChange(fl.IdHash)">
+                            <DropdownItem IsSelected='_featuredList == fl.IdHash'
+                Selected="async _ => await OnFeaturedListChange(fl.IdHash)">
                                 @fl.Name
                             </DropdownItem>
                         }

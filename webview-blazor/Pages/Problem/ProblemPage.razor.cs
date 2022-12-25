@@ -42,11 +42,16 @@ public partial class ProblemPage : ComponentBase
         if (Problem is null)
             return;
 
+        var state = await Js.GetState();
+        if (state is null)
+            state = new();
+        state.ProblemTitleSlug = Problem.TitleSlug;
+
         await Task.WhenAll(new[]
         {
             Problem.RequestSolutions(Js, Array.Empty<string>(), Array.Empty<string>(), 0),
             Problem.RequestDiscussionTopics(Js, 0),
-            Js.UpdateState(Problem.TitleSlug)
+            Js.SetState(state)
         });
     }
 

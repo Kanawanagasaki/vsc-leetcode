@@ -30,10 +30,24 @@ public partial class ProblemsPage : ComponentBase, IDisposable
     private string? _featuredList = null;
     private bool _getCache = true;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         PageProps.OnStateChange += PageProps_OnStateChange;
         JsService.OnSubmissionStateUpdate += JsService_OnSubmissionStateUpdate;
+
+        var state = await Js.GetState();
+        Console.WriteLine(state);
+        if (state?.LastFilter is not null)
+        {
+            _searchKeywords = state.LastFilter.SearchKeywords ?? "";
+            _sort = state.LastFilter.GetSort();
+            _difficulty = state.LastFilter.GetDifficulty();
+            _status = state.LastFilter.GetStatus();
+            _tags = state.LastFilter.Tags?.ToList() ?? new();
+            _featuredList = state.LastFilter.ListId;
+        }
+        if (state?.LastCategorySlug is not null)
+            _categorySlug = state.LastCategorySlug;
     }
 
     private void PageProps_OnStateChange()
@@ -67,6 +81,12 @@ public partial class ProblemsPage : ComponentBase, IDisposable
                 .WithTags(_tags.Count == 0 ? null : _tags.ToArray())
                 .WithFeaturedList(_featuredList);
             var set = await Service.GetProblems(_categorySlug ?? "", page, filters, _getCache);
+            var state = await Js.GetState();
+            if (state is null)
+                state = new();
+            state.LastFilter = filters;
+            state.LastCategorySlug = _categorySlug;
+            await Js.SetState(state);
 
             _totalProblems = set.Total;
             var startInnerIndex = set.Skip < req.StartIndex ? req.StartIndex - set.Skip : 0;
