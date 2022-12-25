@@ -2,13 +2,13 @@
     "name": "vsc-leetcode",
     "displayName": "LeetCode",
     "description": "Solve LeetCode problems inside Visual Studio Code",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": "Kanawanagasaki",
     "license": "MIT",
     "icon": "media/img/logo.png",
     "publisher": "Kanawanagasaki",
     "engines": {
-        "vscode": "^1.73.0"
+        "vscode": "^1.60.0"
     },
     "categories": [
         "Other",
@@ -148,7 +148,7 @@
         "@types/hidefile": "^3.0.0",
         "@types/mocha": "^10.0.0",
         "@types/node": "16.x",
-        "@types/vscode": "^1.73.0",
+        "@types/vscode": "^1.60.0",
         "@typescript-eslint/eslint-plugin": "^5.42.0",
         "@typescript-eslint/parser": "^5.42.0",
         "@vscode/test-electron": "^2.2.0",
