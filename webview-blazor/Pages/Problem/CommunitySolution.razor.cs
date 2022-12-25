@@ -25,6 +25,7 @@ public partial class CommunitySolution : AProblemChildComponent
 
         JsService.OnCommunitySolution += JsService_OnCommunitySolution;
         JsService.OnCommunitySolutionComments += JsService_OnCommunitySolutionComments;
+        Parent.OnProblemChange += Parent_OnProblemChange;
 
         _isRequesting = true;
         _isRequestingComments = true;
@@ -66,6 +67,12 @@ public partial class CommunitySolution : AProblemChildComponent
         StateHasChanged();
     }
 
+    private void Parent_OnProblemChange()
+    {
+        Parent.ShowCommunitySolution(null);
+        StateHasChanged();
+    }
+
     private async Task NextPage()
     {
         _page++;
@@ -91,5 +98,6 @@ public partial class CommunitySolution : AProblemChildComponent
 
         JsService.OnCommunitySolution -= JsService_OnCommunitySolution;
         JsService.OnCommunitySolutionComments -= JsService_OnCommunitySolutionComments;
+        Parent.OnProblemChange -= Parent_OnProblemChange;
     }
 }
